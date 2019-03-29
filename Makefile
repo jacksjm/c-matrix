@@ -17,8 +17,8 @@ all: $(TARGET)
 %: %.o
 	$(CC) $(LDFLAGS) $^ -o $@
 
-main_matriz: main_matriz.c matriz.o toolsv2.o
-	$(CC) $(CCFLAGS) matriz.o toolsv2.o main_matriz.c -o $@ $(LDFLAGS)
+main_matriz: main_matriz.c matriz.o toolsv2.o matriz-operacoes.o
+	$(CC) $(CCFLAGS) matriz-operacoes.o matriz.o toolsv2.o main_matriz.c -o $@ $(LDFLAGS)
 
 gera_matriz2: matriz.o toolsv2.o gera_matriz2.c
 	$(CC) $(CCFLAGS) matriz.o toolsv2.o gera_matriz2.c -o $@ $(LDFLAGS)
@@ -34,7 +34,7 @@ help:
 	@echo
 	@echo "####### Exemplo de Execução #######"
 	@echo "./gera_matriz2 10 10"
-	@echo "./main_matriz 10x10-mat.map 10x10-mat-out.map"
-	
+	@echo "./main_matriz 10x10-mat-1.map 10x10-mat-2.map"
+
 clean:
 	rm -f *.o *~ $(TARGET) *.map *.map-result
