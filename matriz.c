@@ -166,12 +166,16 @@ Imprime os valores da Matriz
 */
 int **liberar_matriz (int **aMatriz, int nLinha, int nColuna) {
 	
-	// Libera as posições de cada Linha
-	for (int i =0; i < nLinha; i++)
-		free(aMatriz[i]);
-	
-	// Libera a Matriz completa
-	free(aMatriz);
+	// Só necessita liberar Matrizes alocadas
+	if (aMatriz != NULL){
+		// Libera as posições de cada Linha
+		for (int i =0; i < nLinha; i++)
+			free(aMatriz[i]);
+
+		// Libera a Matriz completa
+		free(aMatriz);
+	}
+
 	return NULL;
 }
 

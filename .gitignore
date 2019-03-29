@@ -2,6 +2,7 @@
 *.ipch
 *.o
 *.bin
+*.map-result
 main_matriz
 gera_matriz2
 simple_matriz
