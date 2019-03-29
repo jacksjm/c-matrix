@@ -9,4 +9,3 @@ int imprimir_matriz (int **matriz, int linha, int coluna);
 int comparar_matriz (int **matriza, int **matrizb, int linha, int coluna);
 int **liberar_matriz (int **matriz, int linha, int coluna);
 int **alocar_matriz (int linha, int coluna);
-int vldMatriz(int nLa, int nLb, int nN, int nM, int nOperation);

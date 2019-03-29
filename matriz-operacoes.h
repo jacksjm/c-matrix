@@ -4,32 +4,18 @@
 #include <assert.h>
 #include "matriz.h"
 
-#ifndef SOME_HEADER_FILE_H
-#define SOME_HEADER_FILE_H
-typedef struct {
-  int lin_inicio;
-  int lin_fim;
-  int col_inicio;
-  int col_fim;
-} bloco_t;
+void vldAlloc(int **aMatrizA, int **aMatrizB, int **aMatrizC);
 
-typedef struct {
-  int **matriz;
-  bloco_t *bloco;
-} matriz_bloco_t;
-#endif
+void vldMatriz(int nLa, int nLb, int nN, int nM, int nOperation);
 
+int somarIJ (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, int nColA, int nColB, int nLinB);
+int somarJI (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, int nColA, int nColB, int nLinB);
 
-int somarIJ (int **mat_a, int **mat_b, int **mat_c, int N, int La, int M, int Lb);
-int somarJI (int **mat_a, int **mat_b, int **mat_c, int N, int La, int M, int Lb);
+int multiplicarIJK (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, int nColA, int nColB, int nLinB);
+int multiplicarIKJ (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, int nColA, int nColB, int nLinB);
 
-int multiplicarIJK (int **mat_a, int **mat_b, int **mat_c, int N, int L, int M);
-int multiplicarIKJ (int **mat_a, int **mat_b, int **mat_c, int N, int L, int M);
+int multiplicarKIJ (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, int nColA, int nColB, int nLinB);
+int multiplicarJIK (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, int nColA, int nColB, int nLinB);
 
-int multiplicarKIJ (int **mat_a, int **mat_b, int **mat_c, int N, int L, int M);
-int multiplicarJIK (int **mat_a, int **mat_b, int **mat_c, int N, int L, int M);
-
-int multiplicarJKI (int **mat_a, int **mat_b, int **mat_c, int N, int L, int M);
-int multiplicarKJI (int **mat_a, int **mat_b, int **mat_c, int N, int L, int M);
-
-int multiplicar_submatriz (matriz_bloco_t *mat_suba, matriz_bloco_t *mat_subb, matriz_bloco_t *mat_subc);
+int multiplicarJKI (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, int nColA, int nColB, int nLinB);
+int multiplicarKJI (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, int nColA, int nColB, int nLinB);

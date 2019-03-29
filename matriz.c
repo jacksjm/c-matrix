@@ -202,32 +202,3 @@ int **alocar_matriz (int nLinha, int nColuna) {
 	}
 	return aNovaMatriz;
 }
-/*
-function vldMatriz
-Valida Matriz para Realização da Operação
-
-@return int, Retorna 1 caso seja possívela operação e 0 caso não seja
-
-@param nLa, int, Valor de Lado na Matriz A
-@param nLb, int, Valor de Lado na Matriz B
-@param nN, int, Valor de N na Matriz A
-@param nM, int, Valor de M na Matriz B
-@param nOperation, int, Operação a ser realizada
-*/
-int vldMatriz(int nLa, int nLb, int nN, int nM, int nOperation){
-	int nSoma = 1;
-	// Restricao da operacao de soma de matrizes
-	// Numero de linha de matriz_a deve ser o mesmo de colunas da matriz_b
-	if (nOperation == 1){
-		if (nLa != nLb){
-			printf("ERROR: Matriz A vs Matriz B incompatíveis.\n");
-			nSoma = 0;
-		}
-	}else if( nOperation == 2){
-		if(nLa != nLb || nN != nM || nN != nLa || nM != nLb) {
-			printf("ERROR: Matriz A vs Matriz B incompatíveis para Soma.\nOperação de Soma não será realizada.\n");
-			nSoma = 0;
-		}
-	}
-	return nSoma;
-}
