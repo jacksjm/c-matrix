@@ -19,7 +19,7 @@ gcc -Wall -O3  matriz.o toolsv2.o gera_matriz2.c -o gera_matriz2
 ./gera_matriz2 10 10
 ./main_matriz 10x10-mat-1.map 10x10-mat-2.map
 ```
-4. Caso seja necessária uma recompilação, é aconselhavel a utilização do comando make clean para que os arquivos executáveis sejam excluídos. (ex.: `~/Documentos/C/PPA$ make clean`)
+4. Caso seja necessária uma recompilação, é aconselhavel a utilização do comando make clean antes da execução de um novo camando make, para que os arquivos executáveis sejam excluídos. (ex.: `~/Documentos/C/PPA$ make clean`)
 
 # PASSOS PARA GERAÇÃO
 1. Para gerar um arquivo, é necessário executar o comando gera_matriz2, passando os parâmetros de linha e coluna. (ex.: `./gera_matriz2 10 10`: Gera um arquivo com uma matriz 10x10 nomeado _10x10-mat.map_)
@@ -44,7 +44,7 @@ gcc -Wall -O3  matriz.o toolsv2.o gera_matriz2.c -o gera_matriz2
 # OBSERVAÇÕES
 * A função `gera_matriz2` gera um arquivo de nome fixo. Caso seja necessária a geração de dois arquivos, deverão ser ajustados manualmente o nome desses arquivos.
 * Devido as tratativas realizadas de validação de Alocação de Matriz e de Compatibilidade de Matrizes, tanto o arquivo `main_matriz.c` quando a biblioteca `matriz-operacoes.c` foram ajustados (em específicos os parâmetros a serem passados). Com isso, caso seja necessário a alteração do programa `main_matriz.c` é importante se atentar aos parâmetros e posições dos mesmos.
-* Ao final da execução, será questiona se deseja visualizar a sumarização de resultados e comparação das matrizes.
+* Ao final da execução, será questionado se deseja visualizar a sumarização de resultados e comparação das matrizes.
 
 # EXEMPLO DE EXECUÇÃO
 ```
