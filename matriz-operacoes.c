@@ -120,7 +120,7 @@ int multiplicarIKJ (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, i
   vldAlloc(aMatrizA, aMatrizB, aMatrizC);
   
   // Valida se estrutura da Matriz foi respeitada
-  vldMatriz(nColA,nLinB,nLinA,nColB,2);
+  vldMatriz(nColA,nLinB,nLinA,nColB,1);
   
   // Percorre Linha de A
   for (int nCntLA=0; nCntLA < nLinA; nCntLA++ )
@@ -154,7 +154,7 @@ int multiplicarKIJ (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, i
   vldAlloc(aMatrizA, aMatrizB, aMatrizC);
 
   // Valida se estrutura da Matriz foi respeitada
-  vldMatriz(nColA,nLinB,nLinA,nColB,2);
+  vldMatriz(nColA,nLinB,nLinA,nColB,1);
 
   // Percorre Coluna A = Linha B
   for (int nCntLX=0; nCntLX < nColA; nCntLX++ )
@@ -188,7 +188,7 @@ int multiplicarKJI (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, i
   vldAlloc(aMatrizA, aMatrizB, aMatrizC);
 
   // Valida se estrutura da Matriz foi respeitada
-  vldMatriz(nColA,nLinB,nLinA,nColB,2);
+  vldMatriz(nColA,nLinB,nLinA,nColB,1);
 
   // Percorre Coluna A = Linha B
   for (int nCntLX=0; nCntLX < nColA; nCntLX++ )
@@ -222,7 +222,7 @@ int multiplicarJIK (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, i
   vldAlloc(aMatrizA, aMatrizB, aMatrizC);
 
   // Valida se estrutura da Matriz foi respeitada
-  vldMatriz(nColA,nLinB,nLinA,nColB,2);
+  vldMatriz(nColA,nLinB,nLinA,nColB,1);
 
   // Percorre Coluna de B
   for (int nCntCB=0; nCntCB < nColB; nCntCB++ )
@@ -257,7 +257,7 @@ int multiplicarJKI (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, i
   vldAlloc(aMatrizA, aMatrizB, aMatrizC);
 
   // Valida se estrutura da Matriz foi respeitada
-  vldMatriz(nColA,nLinB,nLinA,nColB,2);
+  vldMatriz(nColA,nLinB,nLinA,nColB,1);
 
   // Percorre Coluna de B
   for (int nCntCB=0; nCntCB < nColB; nCntCB++ )
