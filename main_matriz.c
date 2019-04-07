@@ -67,17 +67,6 @@ int main(int argc, char *argv[]) {
 	if ((mat_b == NULL) || (mat_a == NULL)) {
 		printf("ERROR: Out of memory\n");
 	}
-
-	// Restricao da operacao de soma de matrizes
-	// Numero de linha de matriz_a deve ser o mesmo de colunas da matriz_b
-	if (La != Lb && nOperation >= 3 && nOperation <= 10){
-		printf("ERROR: Matriz A vs Matriz B incompatíveis.\n");
-		exit (1);
-	}else if( (N != M || N != La || M != Lb) && ( nOperation == 2 || nOperation == 1 || nOperation == 9 || nOperation == 11) ) {
-		printf("ERROR: Matriz A vs Matriz B incompatíveis para Soma.\nOperação de Soma não será realizada.\n");
-		lSoma = 0;
-		exit (1);
-	}
 	
 	printf("\t\t**** Loaded mat_a NxL(%d,%d) **** \n", N, La);
 	imprimir_matriz(mat_a, N, La);

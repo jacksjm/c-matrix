@@ -304,7 +304,7 @@ void vldMatriz(int nColA, int nLinB, int nLinA, int nColB, int nOperation){
 			exit(1);
 		}
 	}else if( nOperation == 2){
-		if(nColA != nLinB || nLinA != nColB || nLinA != nColA || nColB != nLinB) {
+		if(nColA != nColB || nLinA != nLinB ) {
 			printf("ERROR: Matriz A vs Matriz B incompatíveis para Soma.\nOperação de Soma não será realizada.\n");
 			exit(1);
 		}
