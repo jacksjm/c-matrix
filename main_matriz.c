@@ -98,9 +98,9 @@ int main(int argc, char *argv[]) {
 
   // %%%%%%%%%%%%%%%%%%%%%%%% BEGIN %%%%%%%%%%%%%%%%%%%%%%%%
 	// LIBERAR MEMÓRIA
-	Vsubmat_a = liberar_submatriz (Vsubmat_a);
-	Vsubmat_b = liberar_submatriz (Vsubmat_b);
-	Vsubmat_c= liberar_submatriz (Vsubmat_c);
+	Vsubmat_a = liberar_submatriz (Vsubmat_a,nro_submatrizes);
+	Vsubmat_b = liberar_submatriz (Vsubmat_b,nro_submatrizes);
+	Vsubmat_c= liberar_submatriz (Vsubmat_c,nro_submatrizes);
 
 	liberar_matriz(mat_a,N,La);
 	liberar_matriz(mat_b,Lb,M);

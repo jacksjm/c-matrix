@@ -28,5 +28,5 @@ int **alocar_matriz (int linha, int coluna);
 // submatriz
 int gerar_submatriz (int **mat_origem, int **submatriz, bloco_t *bloco);
 matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int orientacao, int nro_submatrizes);
-matriz_bloco_t **liberar_submatriz (matriz_bloco_t **submatriz);
+matriz_bloco_t **liberar_submatriz (matriz_bloco_t **submatriz, int nro_submatriz);
 matriz_bloco_t **constroi_submatrizv2 (int mat_lin, int mat_col, int divisor);

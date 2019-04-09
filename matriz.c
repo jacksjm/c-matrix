@@ -167,7 +167,7 @@ Imprime os valores da Matriz
 int **liberar_matriz (int **aMatriz, int nLinha, int nColuna) {
 	
 	// Só necessita liberar Matrizes alocadas
-	if (aMatriz != NULL){
+	if (aMatriz) {
 		// Libera as posições de cada Linha
 		for (int i =0; i < nLinha; i++)
 			free(aMatriz[i]);
@@ -232,7 +232,7 @@ matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int
 	matriz_bloco_t **aSubMat = malloc( nro_submatrizes * sizeof(matriz_bloco_t *));
 
 	int nTamLin = ( mat_lin/nro_submatrizes );
-  int nTamCol = ( mat_col/nro_submatrizes );
+  	int nTamCol = ( mat_col/nro_submatrizes );
 
 	for(int nSubMat=0;nSubMat<nro_submatrizes;nSubMat++){
 		bloco_t *blocoX = malloc(sizeof(bloco_t));
@@ -241,21 +241,38 @@ matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int
 		blocoX->col_fim = mat_col;
 		blocoX->lin_inicio = 0;
 		blocoX->lin_fim = mat_lin;
-		if (orientacao ==1){
+		if (orientacao == 1){
 		  blocoX->col_inicio = nTamCol * nSubMat;
 		  blocoX->col_fim = nTamCol * ( nSubMat + 1 );
-	  }else{
-		  blocoX->lin_inicio  = nTamLin * nSubMat;
-		  blocoX->lin_fim = nTamLin * ( nSubMat + 1);
-	  }
+		  // Verifica se é numero impar e se esta na última execução para pegar o ultimo elemento
+		  if ((nSubMat+1 == nro_submatrizes) && ((mat_col/2)*2 != mat_col)){
+			  blocoX->col_fim += 1;
+		  }
+		}else{
+			blocoX->lin_inicio  = nTamLin * nSubMat;
+			blocoX->lin_fim = nTamLin * ( nSubMat + 1);
+			if ((nSubMat+1 == nro_submatrizes) && ((mat_lin/2)*2 != mat_lin)){
+			  blocoX->lin_fim += 1;
+		  	}
+		}
 		int **matrizX;
 		if (orientacao ==1){
-		  matrizX = alocar_matriz(mat_lin, nTamCol);
-		  zerar_matriz(matrizX, mat_lin, nTamCol);
-	  }else{
-		  matrizX = alocar_matriz(nTamLin, mat_col);
-		  zerar_matriz(matrizX, nTamLin, mat_col);
-	  }
+		  if ((nSubMat+1 == nro_submatrizes) && ((mat_col/2)*2 != mat_col)){
+			matrizX = alocar_matriz(mat_lin, nTamCol+1);
+			zerar_matriz(matrizX, mat_lin, nTamCol+1);
+		  }else{
+			matrizX = alocar_matriz(mat_lin, nTamCol);
+			zerar_matriz(matrizX, mat_lin, nTamCol);
+		  }
+		}else{
+		  if ((nSubMat+1 == nro_submatrizes) && ((mat_lin/2)*2 != mat_lin)){
+			matrizX = alocar_matriz(nTamLin+1, mat_col);
+			zerar_matriz(matrizX, nTamLin+1, mat_col);
+		  }else{
+			matrizX = alocar_matriz(nTamLin, mat_col);
+			zerar_matriz(matrizX, nTamLin, mat_col);
+		  }
+		}
 		
 		gerar_submatriz(matriz,matrizX,blocoX);
 
@@ -266,9 +283,15 @@ matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int
 		blocoX->lin_fim = mat_lin;
 		if (orientacao ==1){
 		  blocoX->col_fim = nTamCol;
-	  }else{
+		  if ((nSubMat+1 == nro_submatrizes) && ((mat_col/2)*2 != mat_col)){
+			  blocoX->col_fim += 1;
+		  }
+		}else{
 		  blocoX->lin_fim = nTamLin;
-	  }
+		  if ((nSubMat+1 == nro_submatrizes) && ((mat_lin/2)*2 != mat_lin)){
+			blocoX->lin_fim += 1;
+		  }
+		}
 		
 		aSubMat[nSubMat] = (matriz_bloco_t *) malloc(sizeof(matriz_bloco_t));
 		aSubMat[nSubMat]->bloco = blocoX;
@@ -290,9 +313,7 @@ matriz_bloco_t **constroi_submatrizv2 (int mat_lin, int mat_col, int divisor) {
 		blocoX->lin_inicio = 0;
 		blocoX->lin_fim = mat_lin;
 		
-		int **matrizX = (int **) malloc(mat_lin * sizeof(int * ));
-		for( int nCol=0; nCol < mat_col; nCol++ )
-			matrizX[nCol] = (int *) malloc(mat_col * sizeof(int));
+		int **matrizX = alocar_matriz(mat_lin,mat_col);
 		
 		aSubMat[nSubMat] = (matriz_bloco_t *) malloc(sizeof(matriz_bloco_t));
 		aSubMat[nSubMat]->bloco = blocoX;
@@ -303,7 +324,15 @@ matriz_bloco_t **constroi_submatrizv2 (int mat_lin, int mat_col, int divisor) {
 }
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-matriz_bloco_t **liberar_submatriz (matriz_bloco_t **submatriz) {
-  //#TODO
+matriz_bloco_t **liberar_submatriz (matriz_bloco_t **submatriz, int nro_submatriz) {
+
+  for(int nCnt=0;nCnt<nro_submatriz;nCnt++){
+	  liberar_matriz(submatriz[nCnt]->matriz,submatriz[nCnt]->bloco->lin_fim,submatriz[nCnt]->bloco->col_fim);
+	  free(submatriz[nCnt]->bloco);
+		free(submatriz[nCnt]);
+  }
+  
+  free(submatriz);
+
   return NULL;
 }
