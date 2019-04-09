@@ -206,3 +206,104 @@ int **alocar_matriz (int nLinha, int nColuna) {
 	}
 	return aNovaMatriz;
 }
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+int gerar_submatriz (int **mat_origem, int **submatriz, bloco_t *bloco) {
+  
+	int nCntCol = 0;
+	int nCntLin = 0;
+
+  for (int nLin=bloco->lin_inicio;nLin<bloco->lin_fim;nLin++)
+	{
+	  for (int nCol=bloco->col_inicio;nCol<bloco->col_fim;nCol++)
+		{
+		  submatriz[nCntLin][nCntCol] = mat_origem[nLin][nCol];
+			nCntCol += 1;
+		}
+		nCntLin += 1;
+		nCntCol = 0;
+  }
+  return 0;
+}
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// orientacao, 0 corte horizontal, 1 para corte vertical
+matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int orientacao, int nro_submatrizes) {
+	
+	matriz_bloco_t **aSubMat = malloc( nro_submatrizes * sizeof(matriz_bloco_t *));
+
+	int nTamLin = ( mat_lin/nro_submatrizes );
+  int nTamCol = ( mat_col/nro_submatrizes );
+
+	for(int nSubMat=0;nSubMat<nro_submatrizes;nSubMat++){
+		bloco_t *blocoX = malloc(sizeof(bloco_t));
+		// Gera o Bloco para busca da SubMatriz
+		blocoX->col_inicio = 0;
+		blocoX->col_fim = mat_col;
+		blocoX->lin_inicio = 0;
+		blocoX->lin_fim = mat_lin;
+		if (orientacao ==1){
+		  blocoX->col_inicio = nTamCol * nSubMat;
+		  blocoX->col_fim = nTamCol * ( nSubMat + 1 );
+	  }else{
+		  blocoX->lin_inicio  = nTamLin * nSubMat;
+		  blocoX->lin_fim = nTamLin * ( nSubMat + 1);
+	  }
+		int **matrizX;
+		if (orientacao ==1){
+		  matrizX = alocar_matriz(mat_lin, nTamCol);
+		  zerar_matriz(matrizX, mat_lin, nTamCol);
+	  }else{
+		  matrizX = alocar_matriz(nTamLin, mat_col);
+		  zerar_matriz(matrizX, nTamLin, mat_col);
+	  }
+		
+		gerar_submatriz(matriz,matrizX,blocoX);
+
+	  // Gera o Bloco correto
+		blocoX->col_inicio = 0;
+		blocoX->col_fim = mat_col;
+		blocoX->lin_inicio = 0;
+		blocoX->lin_fim = mat_lin;
+		if (orientacao ==1){
+		  blocoX->col_fim = nTamCol;
+	  }else{
+		  blocoX->lin_fim = nTamLin;
+	  }
+		
+		aSubMat[nSubMat] = (matriz_bloco_t *) malloc(sizeof(matriz_bloco_t));
+		aSubMat[nSubMat]->bloco = blocoX;
+		aSubMat[nSubMat]->matriz = matrizX;
+	}
+	
+  return aSubMat;
+}
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+matriz_bloco_t **constroi_submatrizv2 (int mat_lin, int mat_col, int divisor) {
+
+	matriz_bloco_t **aSubMat = malloc( divisor * sizeof(matriz_bloco_t *));
+
+	for(int nSubMat=0;nSubMat<divisor;nSubMat++){
+		bloco_t *blocoX = malloc(sizeof(bloco_t));
+		blocoX->col_inicio = 0;
+		blocoX->col_fim = mat_col;
+		blocoX->lin_inicio = 0;
+		blocoX->lin_fim = mat_lin;
+		
+		int **matrizX = (int **) malloc(mat_lin * sizeof(int * ));
+		for( int nCol=0; nCol < mat_col; nCol++ )
+			matrizX[nCol] = (int *) malloc(mat_col * sizeof(int));
+		
+		aSubMat[nSubMat] = (matriz_bloco_t *) malloc(sizeof(matriz_bloco_t));
+		aSubMat[nSubMat]->bloco = blocoX;
+		aSubMat[nSubMat]->matriz = matrizX;
+	}
+
+	return aSubMat;
+}
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+matriz_bloco_t **liberar_submatriz (matriz_bloco_t **submatriz) {
+  //#TODO
+  return NULL;
+}
