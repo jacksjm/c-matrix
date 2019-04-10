@@ -1,7 +1,7 @@
 # GNU Makefile
 
 CC = gcc
-CCFLAGS = -Wall -g #-llikwid #-funroll-all-loops
+CCFLAGS = -Wall -O3 #-g -llikwid #-funroll-all-loops
 LDFLAGS =
 TARGET = main_matriz gera_matriz2 simple_matriz help
 EXE = ./gera_matriz2
