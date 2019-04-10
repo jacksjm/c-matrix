@@ -231,73 +231,85 @@ matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int
 	
 	matriz_bloco_t **aSubMat = malloc( nro_submatrizes * sizeof(matriz_bloco_t *));
 
-	int nTamLin = ( mat_lin/nro_submatrizes );
-  	int nTamCol = ( mat_col/nro_submatrizes );
+	int nTamLim = orientacao == 1? mat_col : mat_lin;
+  int nTamCar = 1;
+	int nResto = 0;
+	int nUseRes = 0;
+	int nLastEnd = 0;
 
-	for(int nSubMat=0;nSubMat<nro_submatrizes;nSubMat++){
-		bloco_t *blocoX = malloc(sizeof(bloco_t));
-		// Gera o Bloco para busca da SubMatriz
-		blocoX->col_inicio = 0;
-		blocoX->col_fim = mat_col;
-		blocoX->lin_inicio = 0;
-		blocoX->lin_fim = mat_lin;
-		if (orientacao == 1){
-		  blocoX->col_inicio = nTamCol * nSubMat;
-		  blocoX->col_fim = nTamCol * ( nSubMat + 1 );
-		  // Verifica se é numero impar e se esta na última execução para pegar o ultimo elemento
-		  if ((nSubMat+1 == nro_submatrizes) && ((mat_col/2)*2 != mat_col)){
-			  blocoX->col_fim += 1;
-		  }
-		}else{
-			blocoX->lin_inicio  = nTamLin * nSubMat;
-			blocoX->lin_fim = nTamLin * ( nSubMat + 1);
-			if ((nSubMat+1 == nro_submatrizes) && ((mat_lin/2)*2 != mat_lin)){
-			  blocoX->lin_fim += 1;
-		  	}
-		}
-		int **matrizX;
-		if (orientacao ==1){
-		  if ((nSubMat+1 == nro_submatrizes) && ((mat_col/2)*2 != mat_col)){
-			matrizX = alocar_matriz(mat_lin, nTamCol+1);
-			zerar_matriz(matrizX, mat_lin, nTamCol+1);
-		  }else{
-			matrizX = alocar_matriz(mat_lin, nTamCol);
-			zerar_matriz(matrizX, mat_lin, nTamCol);
-		  }
-		}else{
-		  if ((nSubMat+1 == nro_submatrizes) && ((mat_lin/2)*2 != mat_lin)){
-			matrizX = alocar_matriz(nTamLin+1, mat_col);
-			zerar_matriz(matrizX, nTamLin+1, mat_col);
-		  }else{
-			matrizX = alocar_matriz(nTamLin, mat_col);
-			zerar_matriz(matrizX, nTamLin, mat_col);
-		  }
-		}
-		
-		gerar_submatriz(matriz,matrizX,blocoX);
-
-	  // Gera o Bloco correto
-		blocoX->col_inicio = 0;
-		blocoX->col_fim = mat_col;
-		blocoX->lin_inicio = 0;
-		blocoX->lin_fim = mat_lin;
-		if (orientacao ==1){
-		  blocoX->col_fim = nTamCol;
-		  if ((nSubMat+1 == nro_submatrizes) && ((mat_col/2)*2 != mat_col)){
-			  blocoX->col_fim += 1;
-		  }
-		}else{
-		  blocoX->lin_fim = nTamLin;
-		  if ((nSubMat+1 == nro_submatrizes) && ((mat_lin/2)*2 != mat_lin)){
-			blocoX->lin_fim += 1;
-		  }
-		}
-		
-		aSubMat[nSubMat] = (matriz_bloco_t *) malloc(sizeof(matriz_bloco_t));
-		aSubMat[nSubMat]->bloco = blocoX;
-		aSubMat[nSubMat]->matriz = matrizX;
+	// Define uma Distribuição de Carga Simples
+	// Enquanto o tamanho de cada carga multiplicado pela
+	// quantidade de processamentos for menor que o limite
+	// alimenta a carga
+	while ((nTamCar * nro_submatrizes) <= nTamLim) {
+		nTamCar += 1;
 	}
-	
+
+	// Retorna ao estado anterior a superação do limite
+	nTamCar -= 1;
+
+	// Verifica se há "resto" de alocação
+	if ( nTamCar * nro_submatrizes < nTamLim){
+		nResto = nTamLim - ( nTamCar * nro_submatrizes );
+	}
+
+	// Se carga estiver zerada, há mais processamentos que limites
+	if (nTamCar == 0) {
+		printf("Há mais processamentos do que submatrizes, favor rever quantidade de processos.\n");
+		exit(1);
+	}else{
+		for(int nSubMat=0;nSubMat<nro_submatrizes;nSubMat++){
+
+			// Distribui o resto de carga
+			if ( nResto != 0 ){
+				nUseRes = 1;
+				nResto -= 1;
+			}else{
+				nUseRes = 0;
+			}
+
+			bloco_t *blocoX = malloc(sizeof(bloco_t));
+			// Gera o Bloco para busca da SubMatriz
+			blocoX->col_inicio = 0;
+			blocoX->col_fim = mat_col;
+			blocoX->lin_inicio = 0;
+			blocoX->lin_fim = mat_lin;
+			if (orientacao == 1){
+				blocoX->col_inicio = nLastEnd;
+				blocoX->col_fim = nLastEnd + nTamCar + nUseRes;
+			}else{
+				blocoX->lin_inicio = nLastEnd;
+				blocoX->lin_fim = nLastEnd + nTamCar + nUseRes;
+			}
+			nLastEnd += nTamCar + nUseRes;
+			int **matrizX;
+			if (orientacao ==1){
+				matrizX = alocar_matriz(mat_lin, nTamCar + nUseRes);
+				zerar_matriz(matrizX, mat_lin, nTamCar + nUseRes);
+			}else{
+				matrizX = alocar_matriz(nTamCar + nUseRes, mat_col);
+				zerar_matriz(matrizX, nTamCar + nUseRes, mat_col);
+			}
+			
+			gerar_submatriz(matriz,matrizX,blocoX);
+
+			// Gera o Bloco correto
+			blocoX->col_inicio = 0;
+			blocoX->col_fim = mat_col;
+			blocoX->lin_inicio = 0;
+			blocoX->lin_fim = mat_lin;
+			if (orientacao ==1){
+				blocoX->col_fim = nTamCar + nUseRes;
+			}else{
+				blocoX->lin_fim = nTamCar + nUseRes;
+			}
+			
+			aSubMat[nSubMat] = (matriz_bloco_t *) malloc(sizeof(matriz_bloco_t));
+			aSubMat[nSubMat]->bloco = blocoX;
+			aSubMat[nSubMat]->matriz = matrizX;
+		}
+	}
+
   return aSubMat;
 }
 
