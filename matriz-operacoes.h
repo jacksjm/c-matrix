@@ -19,3 +19,5 @@ int multiplicarJIK (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, i
 
 int multiplicarJKI (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, int nColA, int nColB, int nLinB);
 int multiplicarKJI (int **aMatrizA, int **aMatrizB, int **aMatrizC, int nLinA, int nColA, int nColB, int nLinB);
+
+int multiplicar_submatriz (matriz_bloco_t *mat_suba, matriz_bloco_t *mat_subb, matriz_bloco_t *mat_subc);

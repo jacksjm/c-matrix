@@ -304,9 +304,15 @@ void vldMatriz(int nColA, int nLinB, int nLinA, int nColB, int nOperation){
 			exit(1);
 		}
 	}else if( nOperation == 2){
-		if(nColA != nLinB || nLinA != nColB || nLinA != nColA || nColB != nLinB) {
+		if(nColA != nColB || nLinA != nLinB ) {
 			printf("ERROR: Matriz A vs Matriz B incompatíveis para Soma.\nOperação de Soma não será realizada.\n");
 			exit(1);
 		}
 	}
+}
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+int multiplicar_submatriz (matriz_bloco_t *mat_suba, matriz_bloco_t *mat_subb, matriz_bloco_t *mat_subc) {
+  multiplicarIJK(mat_suba->matriz,mat_subb->matriz,mat_subc->matriz,mat_suba->bloco->lin_fim,mat_suba->bloco->col_fim,mat_subb->bloco->col_fim,mat_subb->bloco->lin_fim);
+	return 0;
 }
