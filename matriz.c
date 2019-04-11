@@ -206,33 +206,52 @@ int **alocar_matriz (int nLinha, int nColuna) {
 	}
 	return aNovaMatriz;
 }
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+/*
+function gerar_submatriz
+Realiza a Cópia da Matriz Original para a Sub Matriz
+
+@return integer, Sempre zero
+
+@param mat_origem, pointer, Ponteiro para a Matriz Origem
+@param submatriz, pointer, Ponteiro para a Sub Matriz que será alimentada
+@param bloco, pointer, Ponteiro para as Informações da Matriz Origem
+*/
 int gerar_submatriz (int **mat_origem, int **submatriz, bloco_t *bloco) {
   
 	int nCntCol = 0;
 	int nCntLin = 0;
 
-  for (int nLin=bloco->lin_inicio;nLin<bloco->lin_fim;nLin++)
-	{
-	  for (int nCol=bloco->col_inicio;nCol<bloco->col_fim;nCol++)
+	// Percorre a matriz origem para alimentar os valores da Sub Matriz
+	for (int nLin=bloco->lin_inicio;nLin<bloco->lin_fim;nLin++)
 		{
-		  submatriz[nCntLin][nCntCol] = mat_origem[nLin][nCol];
-			nCntCol += 1;
-		}
-		nCntLin += 1;
-		nCntCol = 0;
-  }
-  return 0;
+		for (int nCol=bloco->col_inicio;nCol<bloco->col_fim;nCol++)
+			{
+				submatriz[nCntLin][nCntCol] = mat_origem[nLin][nCol];
+				nCntCol += 1;
+			}
+			nCntLin += 1;
+			nCntCol = 0;
+	}
+  	return 0;
 }
+/*
+function particionar_matriz
+Realiza a Cópia da Matriz Original para a Sub Matriz
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// orientacao, 0 corte horizontal, 1 para corte vertical
+@return pointer, Ponteiro para as Sub Matrizes Geradas
+
+@param matriz, pointer, Ponteiro para a Matriz Origem
+@param mat_lim, integer, Valor de Linha da Matriz
+@param mat_col, integer, Valor de Coluna da Matriz
+@param orientacao, integer, Corte que será realizado (0 - horizontal, 1 - vertical)
+@param nro_submatrizes, integer, Número de Sub Matrizes a serem geradas
+*/
 matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int orientacao, int nro_submatrizes) {
 	
 	matriz_bloco_t **aSubMat = malloc( nro_submatrizes * sizeof(matriz_bloco_t *));
 
 	int nTamLim = orientacao == 1? mat_col : mat_lin;
-  int nTamCar = 1;
+    int nTamCar = 1;
 	int nResto = 0;
 	int nUseRes = 0;
 	int nLastEnd = 0;
@@ -268,6 +287,7 @@ matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int
 				nUseRes = 0;
 			}
 
+			// Aloca um Bloco do Tipo bloco_t para utilização
 			bloco_t *blocoX = malloc(sizeof(bloco_t));
 			// Gera o Bloco para busca da SubMatriz
 			blocoX->col_inicio = 0;
@@ -282,6 +302,8 @@ matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int
 				blocoX->lin_fim = nLastEnd + nTamCar + nUseRes;
 			}
 			nLastEnd += nTamCar + nUseRes;
+
+			// Aloca uma Matriz para utilização
 			int **matrizX;
 			if (orientacao ==1){
 				matrizX = alocar_matriz(mat_lin, nTamCar + nUseRes);
@@ -291,9 +313,11 @@ matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int
 				zerar_matriz(matrizX, nTamCar + nUseRes, mat_col);
 			}
 			
+			// Gera a SubMatriz com base nos dados da Matriz Principal
+			// e as posições da contagem de corte
 			gerar_submatriz(matriz,matrizX,blocoX);
 
-			// Gera o Bloco correto
+			// Gera o Bloco com o tamanho correto da Matriz
 			blocoX->col_inicio = 0;
 			blocoX->col_fim = mat_col;
 			blocoX->lin_inicio = 0;
@@ -304,6 +328,7 @@ matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int
 				blocoX->lin_fim = nTamCar + nUseRes;
 			}
 			
+			// Salva as alocações na matriz de retorno
 			aSubMat[nSubMat] = (matriz_bloco_t *) malloc(sizeof(matriz_bloco_t));
 			aSubMat[nSubMat]->bloco = blocoX;
 			aSubMat[nSubMat]->matriz = matrizX;
@@ -313,20 +338,36 @@ matriz_bloco_t **particionar_matriz (int **matriz, int mat_lin, int mat_col, int
   return aSubMat;
 }
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+/*
+function constroi_submatrizv2
+Controi a Matriz que receberá as operações de Multiplicação das Sub Matrizes
+
+@return pointer, Ponteiro para a Matriz
+
+@param mat_lim, integer, Valor de Linha da Matriz
+@param mat_col, integer, Valor de Coluna da Matriz
+@param divisor, integer, Número de Sub Matrizes a serem geradas
+*/
 matriz_bloco_t **constroi_submatrizv2 (int mat_lin, int mat_col, int divisor) {
 
+	// Aloca o espaço de Memória para o Vetor de Matrizes
 	matriz_bloco_t **aSubMat = malloc( divisor * sizeof(matriz_bloco_t *));
 
+	// Percorre o número de divisores
 	for(int nSubMat=0;nSubMat<divisor;nSubMat++){
+
+		// Cria um bloco para receber os valores
 		bloco_t *blocoX = malloc(sizeof(bloco_t));
 		blocoX->col_inicio = 0;
 		blocoX->col_fim = mat_col;
 		blocoX->lin_inicio = 0;
 		blocoX->lin_fim = mat_lin;
 		
+		// Cria a Matriz principal alocada e zerada
 		int **matrizX = alocar_matriz(mat_lin,mat_col);
-		
+		zerar_matriz(matrizX,mat_lin,mat_col);
+
+		// Adiciona a Matriz de Retorno
 		aSubMat[nSubMat] = (matriz_bloco_t *) malloc(sizeof(matriz_bloco_t));
 		aSubMat[nSubMat]->bloco = blocoX;
 		aSubMat[nSubMat]->matriz = matrizX;
@@ -335,15 +376,30 @@ matriz_bloco_t **constroi_submatrizv2 (int mat_lin, int mat_col, int divisor) {
 	return aSubMat;
 }
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+/*
+function liberar_submatriz
+Libera as Matrizes de Sub Matriz
+
+@return NULL, Sempre nulo
+
+@param submatriz, pointer, Ponteiro para a Matriz
+@param nro_submatriz, integer, Número de Sub Matrizes geradas
+*/
 matriz_bloco_t **liberar_submatriz (matriz_bloco_t **submatriz, int nro_submatriz) {
 
+  // Percorre as submatrizes
   for(int nCnt=0;nCnt<nro_submatriz;nCnt++){
+	  // Libera a Matriz
 	  liberar_matriz(submatriz[nCnt]->matriz,submatriz[nCnt]->bloco->lin_fim,submatriz[nCnt]->bloco->col_fim);
+
+	  // Libera o Bloco
 	  free(submatriz[nCnt]->bloco);
-		free(submatriz[nCnt]);
+
+	  // Libera o Objeto de Sub Matrizes
+	  free(submatriz[nCnt]);
   }
   
+  // Libera o Vetor de Matrizes
   free(submatriz);
 
   return NULL;
